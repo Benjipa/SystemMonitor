@@ -98,13 +98,27 @@ int LinuxParser::TotalProcesses() { return 0; }
 // TODO: Read and return the number of running processes
 int LinuxParser::RunningProcesses() { return 0; }
 
-// TODO: Read and return the command associated with a process
-// REMOVE: [[maybe_unused]] once you define the function
-string LinuxParser::Command(int pid[[maybe_unused]]) { return string(); }
+
+string LinuxParser::Command(int pid)
+{
+  string PID = to_string(pid);
+  string line;
+
+  std::ifstream filestream(kProcDirectory + PID + kStatusFilename);
+  if(filestream.is_open())
+  {
+    std::getline(filestream, line);
+  }
+  return line;
+}
 
 // TODO: Read and return the memory used by a process
 // REMOVE: [[maybe_unused]] once you define the function
-string LinuxParser::Ram(int pid[[maybe_unused]]) { return string(); }
+string LinuxParser::Ram(int pid)
+{
+  
+  return string();
+}
 
 /*
   Get User ID
