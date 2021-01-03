@@ -40,7 +40,7 @@ int Process::Pid()
  }
 
 // TODO: Return this process's CPU utilization
-float Process::CpuUtilization()
+float Process::CpuUtilization() const
 {
     string line;
     string PID = to_string(this->pid);
@@ -67,17 +67,14 @@ float Process::CpuUtilization()
             std::istringstream linestream(line);
             while(linestream >> data)
             {
-                if(count == USER_TIME_POSITION){
-                    userTime = float(stoi(data));
-                    // cout << "userTime = " << userTime << endl;
-                }
+                if(count == USER_TIME_POSITION){ userTime = float(stoi(data)); }
                 if(count == KERNEL_TIME_POSITION){ kernelTime = float(stoi(data)); }
                 if(count == WAIT_USER_TIME_POSITION){ waitUserTime = float(stoi(data)); }
                 if(count == WAIT_KERNEL_TIME_POSITION){ waitKernelTime = float(stoi(data)); }
-                if(count == START_TIME_POSITION){
+                if(count == START_TIME_POSITION)
+                {
                     startTime = float(stoi(data));
-                    // cout << "data = " << data << endl;
-                    // cout << "startTime = " << startTime << endl;
+                    break;
                 }
                 count++;
             }
@@ -90,16 +87,20 @@ float Process::CpuUtilization()
     seconds = upTime - (startTime/sysconf(_SC_CLK_TCK));
     cpuUsage = ((totalTime/sysconf(_SC_CLK_TCK)) / seconds);
 
-    // cout << "startTime = " << startTime << endl;
-    // cout << "cpuUsage = " << cpuUsage << endl;
+    // this->cpuUtilization = cpuUsage;
     return cpuUsage;
 }
 
-// TODO: Return the command that generated this process
-string Process::Command() { return string(); }
+string Process::Command()
+{
+    return LinuxParser::Command(this->pid);
+}
 
 // TODO: Return this process's memory utilization
-string Process::Ram() { return string(); }
+string Process::Ram()
+{
+    return LinuxParser::Ram(this->pid);
+}
 
 // TODO: Return the user (name) that generated this process
 string Process::User()
@@ -113,8 +114,9 @@ long int Process::UpTime() { return 0; }
 
 // TODO: Overload the "less than" comparison operator for Process objects
 // REMOVE: [[maybe_unused]] once you define the function
-bool Process::operator<(Process& a) const
+bool Process::operator<(Process const& a) const
 {
     return (a.CpuUtilization() < this->CpuUtilization());
-    // return (a.pid < this->pid);
+    // return (a.cpuUtilization < this->cpuUtilization);
+    // return false;
 }
