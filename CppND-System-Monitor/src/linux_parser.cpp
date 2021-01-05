@@ -112,8 +112,9 @@ string LinuxParser::Command(int pid)
   return line;
 }
 
-// TODO: Read and return the memory used by a process
-// REMOVE: [[maybe_unused]] once you define the function
+/*
+  Read and return the memory used by a process
+*/
 string LinuxParser::Ram(int pid)
 {
     string PID = to_string(pid);
@@ -137,7 +138,7 @@ string LinuxParser::Ram(int pid)
             }
         }
     }
-  return ramSize;
+    return ramSize;
 }
 
 /*
@@ -195,13 +196,15 @@ string LinuxParser::User(std::string UID)
     return user;
 }
 
-// TODO: Read and return the uptime of a process
-// REMOVE: [[maybe_unused]] once you define the function
+/*
+  Read and return the uptime of a process
+*/
 long int LinuxParser::UpTime(int pid)
 {
     string PID = to_string(pid);
     string line;
     string uptime;
+    int time{0};
     int count{0};
 
     std::ifstream filestream(kProcDirectory + PID + kStatFilename);
@@ -214,13 +217,12 @@ long int LinuxParser::UpTime(int pid)
             {
                 if(count == 22)
                 {
-                  int time = stoi(uptime);
-                  // cout << "upTime = " << (time/sysconf(_SC_CLK_TCK)) << endl;
+                  time = stoi(uptime);
                   return (time/sysconf(_SC_CLK_TCK));
                 }
                 count++;
             }
         }
     }
-    return 0;
+    return time;
 }

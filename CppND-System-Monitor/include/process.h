@@ -23,10 +23,7 @@ class Process {
     private:
         int pid{0};
         std::string user{};
-        // std::string command{};
         float cpuUtilization{0.0};
-        // std::string ram{};
-        // long int upTime{0};
 };
 
 #endif

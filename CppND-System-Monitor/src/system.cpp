@@ -23,17 +23,21 @@ using LinuxParser::kProcDirectory;
 using LinuxParser::kOSPath;
 using LinuxParser::kStatFilename;
 using LinuxParser::kUptimeFilename;
+using LinuxParser::kMeminfoFilename;
 
 #define KERNEL  ((int)2)
 
-// TODO: Return the system's CPU
+/*
+    Returns a reference to Processor object.
+*/
 Processor& System::Cpu()
 {
-    Processor cpu;
-    return cpu;
+    return cpu_;
 }
 
-// TODO: Return a container composed of the system's processes
+/*
+    Creates a process object and adds it to the process_ vector
+*/
 vector<Process>& System::Processes()
 {
     Process process;
@@ -55,7 +59,9 @@ vector<Process>& System::Processes()
     return processes_;
 }
 
-// TODO: Return the system's kernel identifier (string)
+/*
+    Returns the systems kernel information
+*/
 std::string System::Kernel()
 {
     int count = 0;
@@ -83,10 +89,47 @@ std::string System::Kernel()
     return kernel;
 }
 
-// TODO: Return the system's memory utilization
-float System::MemoryUtilization() { return 0.0; }
+/*
+    Returns the systems memory utilization
+*/
+float System::MemoryUtilization()
+{
+    int ram{0};
+    string line;
+    string parameter;
+    int data{0};
+    float memTotal{0.0};
+    float memFree{0.0};
+    float totalMemoryUsed{0.0};
 
-// TODO: Return the operating system name
+    std::ifstream filestream(kProcDirectory + kMeminfoFilename);
+    if(filestream.is_open())
+    {
+        while(std::getline(filestream, line))
+        {
+            std::istringstream linestream(line);
+            if(linestream >> parameter >> data)
+            {
+                if(parameter == "MemTotal:")
+                {
+                    memTotal = data/1000;
+                }
+
+                if(parameter == "MemFree:")
+                {
+                    memFree = data/1000;
+                }
+            }
+        }
+    }
+
+    totalMemoryUsed = memTotal - memFree;
+    return totalMemoryUsed;
+}
+
+/*
+    Returns the operating system name
+*/
 std::string System::OperatingSystem()
 {
     string line;
@@ -118,7 +161,9 @@ std::string System::OperatingSystem()
     return value;
 }
 
-// TODO: Return the number of processes actively running on the system
+/*
+    Returns the number of processes actively running on the system
+*/
 int System::RunningProcesses()
 {
     string line;
@@ -142,7 +187,9 @@ int System::RunningProcesses()
     return value;
 }
 
-// TODO: Return the total number of processes on the system
+/*
+    Return the total number of processes on the system
+*/
 int System::TotalProcesses()
 {
     string line;
@@ -166,7 +213,9 @@ int System::TotalProcesses()
     return value;
 }
 
-// TODO: Return the number of seconds since the system started running
+/*
+    Return the number of seconds since the system started running
+*/
 long int System::UpTime()
 {
     string line;
@@ -179,7 +228,6 @@ long int System::UpTime()
             std::istringstream linestream(line);
             if(linestream >> uptime)
             {
-                // cout << uptime << endl;
                 return uptime;
             }
         }
