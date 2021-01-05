@@ -46,7 +46,7 @@ vector<Process>& System::Processes()
     vector<int> pidVec = LinuxParser::Pids(); //use this
 
     /* Initialize process_ vector */
-    for(int i = 0; i < pidVec.size(); i++)
+    for(unsigned int i = 0; i < pidVec.size(); i++)
     {
         int pid = pidVec[i];
         processes_.push_back(process);
@@ -94,7 +94,6 @@ std::string System::Kernel()
 */
 float System::MemoryUtilization()
 {
-    int ram{0};
     string line;
     string parameter;
     int data{0};
