@@ -1,0 +1,3 @@
+/mnt/c/Users/benja/Udacity/Cpp_developer/system_monitor/CppND-System-Monitor/build/CMakeFiles/rebuild_cache.dir
+/mnt/c/Users/benja/Udacity/Cpp_developer/system_monitor/CppND-System-Monitor/build/CMakeFiles/monitor.dir
+/mnt/c/Users/benja/Udacity/Cpp_developer/system_monitor/CppND-System-Monitor/build/CMakeFiles/edit_cache.dir
