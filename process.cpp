@@ -67,6 +67,7 @@ float Process::CpuUtilization() const
             std::istringstream linestream(line);
             while(linestream >> data)
             {
+                /* Get each parameter from different positions in the file */
                 if(count == USER_TIME_POSITION){ userTime = float(stoi(data)); }
                 if(count == KERNEL_TIME_POSITION){ kernelTime = float(stoi(data)); }
                 if(count == WAIT_USER_TIME_POSITION){ waitUserTime = float(stoi(data)); }
@@ -87,7 +88,6 @@ float Process::CpuUtilization() const
     seconds = upTime - (startTime/sysconf(_SC_CLK_TCK));
     cpuUsage = ((totalTime/sysconf(_SC_CLK_TCK)) / seconds);
 
-    // this->cpuUtilization = cpuUsage;
     return cpuUsage;
 }
 
@@ -110,7 +110,10 @@ string Process::User()
 }
 
 // TODO: Return the age of this process (in seconds)
-long int Process::UpTime() { return 0; }
+long int Process::UpTime()
+{
+    return LinuxParser::UpTime(this->pid);
+}
 
 // TODO: Overload the "less than" comparison operator for Process objects
 // REMOVE: [[maybe_unused]] once you define the function

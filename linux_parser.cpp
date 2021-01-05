@@ -9,7 +9,7 @@
 using std::cout;
 using std::cin;
 using std::endl;
-using std::stof;
+using std::stoi;
 using std::string;
 using std::to_string;
 using std::vector;
@@ -116,8 +116,28 @@ string LinuxParser::Command(int pid)
 // REMOVE: [[maybe_unused]] once you define the function
 string LinuxParser::Ram(int pid)
 {
-  
-  return string();
+    string PID = to_string(pid);
+    int ram{0};
+    string line;
+    string data;
+    string ramSize;
+    std::ifstream filestream(kProcDirectory + PID + kStatusFilename);
+    if(filestream.is_open())
+    {
+        while(std::getline(filestream, line))
+        {
+            std::istringstream linestream(line);
+            if(linestream >> data >> ramSize)
+            {
+                if(data == "VmSize:")
+                {
+                    ram = stoi(ramSize)/1000;
+                    return to_string(ram);
+                }
+            }
+        }
+    }
+  return ramSize;
 }
 
 /*
@@ -181,19 +201,26 @@ long int LinuxParser::UpTime(int pid)
 {
     string PID = to_string(pid);
     string line;
-    long int uptime;
-    // std::ifstream filestream(kProcDirectory + PID + kUptimeFilename);
-    // if(filestream.is_open())
-    // {
-    //     while(std::getline(filestream, line))
-    //     {
-    //         std::istringstream linestream(line);
-    //         if(linestream >> uptime)
-    //         {
-    //             // cout << uptime << endl;
-    //             return uptime;
-    //         }
-    //     }
-    // }
-    return uptime;
+    string uptime;
+    int count{0};
+
+    std::ifstream filestream(kProcDirectory + PID + kStatFilename);
+    if(filestream.is_open())
+    {
+        while(std::getline(filestream, line))
+        {
+            std::istringstream linestream(line);
+            while(linestream >> uptime)
+            {
+                if(count == 22)
+                {
+                  int time = stoi(uptime);
+                  // cout << "upTime = " << (time/sysconf(_SC_CLK_TCK)) << endl;
+                  return (time/sysconf(_SC_CLK_TCK));
+                }
+                count++;
+            }
+        }
+    }
+    return 0;
 }
