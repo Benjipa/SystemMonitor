@@ -3,6 +3,7 @@
 #include <string>
 #include <vector>
 #include <iostream>
+#include <stdlib.h>
 
 #include "linux_parser.h"
 
@@ -203,9 +204,9 @@ long int LinuxParser::UpTime(int pid)
 {
     string PID = to_string(pid);
     string line;
-    long int uptime;
-    long long int time{0};
-    int count{0};
+    string uptime;
+    long int time{0};
+    int count{1};
 
     std::ifstream filestream(kProcDirectory + PID + kStatFilename);
     if(filestream.is_open())
@@ -217,10 +218,8 @@ long int LinuxParser::UpTime(int pid)
             {
                 if(count == 22)
                 {
-                  // cout << "uptime = " << uptime << endl;
-                  return (uptime/sysconf(_SC_CLK_TCK));
-                  // time = (long long int)stoi(uptime);
-                  // return (time/sysconf(_SC_CLK_TCK));
+                  time = stoi(uptime);
+                  return (time/sysconf(_SC_CLK_TCK));
                 }
                 count++;
             }
