@@ -203,8 +203,8 @@ long int LinuxParser::UpTime(int pid)
 {
     string PID = to_string(pid);
     string line;
-    string uptime;
-    int time{0};
+    long int uptime;
+    long long int time{0};
     int count{0};
 
     std::ifstream filestream(kProcDirectory + PID + kStatFilename);
@@ -217,8 +217,10 @@ long int LinuxParser::UpTime(int pid)
             {
                 if(count == 22)
                 {
-                  time = stoi(uptime);
-                  return (time/sysconf(_SC_CLK_TCK));
+                  // cout << "uptime = " << uptime << endl;
+                  return (uptime/sysconf(_SC_CLK_TCK));
+                  // time = (long long int)stoi(uptime);
+                  // return (time/sysconf(_SC_CLK_TCK));
                 }
                 count++;
             }
