@@ -123,7 +123,7 @@ float System::MemoryUtilization()
     }
 
     totalMemoryUsed = memTotal - memFree;
-    return totalMemoryUsed;
+    return (totalMemoryUsed/memTotal);
 }
 
 /*

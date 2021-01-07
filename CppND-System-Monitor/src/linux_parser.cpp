@@ -6,6 +6,7 @@
 #include <stdlib.h>
 
 #include "linux_parser.h"
+#include "system.h"
 
 using std::cout;
 using std::cin;
@@ -218,8 +219,10 @@ long int LinuxParser::UpTime(int pid)
             {
                 if(count == 22)
                 {
-                  time = stoi(uptime);
-                  return (time/sysconf(_SC_CLK_TCK));
+                  time = stoi(uptime)/sysconf(_SC_CLK_TCK);
+                  System system;
+                  long int startTime = system.UpTime() - time;
+                  return startTime;
                 }
                 count++;
             }
